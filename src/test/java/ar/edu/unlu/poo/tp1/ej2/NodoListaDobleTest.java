@@ -40,10 +40,31 @@ public class NodoListaDobleTest {
     }
 
     @Test
+    public void probarQueSiNodoTieneAnteriorVale5(){
+        nodoLista = new NodoListaDoble(10);
+        nodoLista.setAnterior(new NodoListaDoble(5));
+        assertEquals(5,nodoLista.getAnterior().getElemento());
+    }
+
+    @Test
+    public void probarQueSiNodoTieneAnteriorValeTrue(){
+        nodoLista = new NodoListaDoble(10);
+        nodoLista.setAnterior(new NodoListaDoble(true));
+        assertEquals(true,nodoLista.getAnterior().getElemento());
+    }
+
+    @Test
     public void probarQueSiNodoTieneSiguienteAsignadoEsOtroNodo(){
         nodoLista = new NodoListaDoble(1);
         nodoLista.setSiguiente(new NodoListaDoble(2));
         assertInstanceOf(NodoListaDoble.class,nodoLista.getSiguiente());
+    }
+
+    @Test
+    public void probarQueSiNodoTieneAnteriorAsignadoEsOtroNodo(){
+        nodoLista = new NodoListaDoble(1);
+        nodoLista.setAnterior(new NodoListaDoble(2));
+        assertInstanceOf(NodoListaDoble.class,nodoLista.getAnterior());
     }
 
 }

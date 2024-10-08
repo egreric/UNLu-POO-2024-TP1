@@ -10,7 +10,9 @@ public class ListaEnlazadaDoble {
         if (esVacia()) {
             primerElemento = new NodoListaDoble(elemento);
         } else {
-            buscaNodo(longitud()).setSiguiente(new NodoListaDoble(elemento));
+            NodoListaDoble nodoBuscado = buscaNodo(longitud()); // busco el ultimo elemento de la lista antes de agregar el nuevo ultimo
+            nodoBuscado.setSiguiente(new NodoListaDoble(elemento)); // agrego ultimo elemento
+            nodoBuscado.getSiguiente().setAnterior(nodoBuscado); // al ultimo elemento le seteo el nodo anterior al ultimo (viejo ultimo)
         }
         cantidadElementos++;
 
@@ -30,13 +32,17 @@ public class ListaEnlazadaDoble {
     }
 
     private NodoListaDoble buscaNodo(int posicionARecuperar) {
-        NodoListaDoble nodo = primerElemento;
-        int posicionActual = 1;
-        while (posicionActual != posicionARecuperar) {
-            nodo = nodo.getSiguiente();
-            posicionActual++;
+        if (posicionValida(posicionARecuperar)) {
+            NodoListaDoble nodo = primerElemento;
+            int posicionActual = 1;
+            while (posicionActual != posicionARecuperar) {
+                nodo = nodo.getSiguiente();
+                posicionActual++;
+            }
+            return nodo;
+        } else {
+            return null;
         }
-        return nodo;
     }
 
     public int longitud() {
@@ -47,10 +53,14 @@ public class ListaEnlazadaDoble {
         if (posicionValida(posicion)){
             if (posicion == 1){
                 primerElemento = primerElemento.getSiguiente();
+                primerElemento.setAnterior(null);
             } else {
                 NodoListaDoble nodoAnterior = buscaNodo(posicion-1);
                 NodoListaDoble nodoAEliminar = nodoAnterior.getSiguiente();
                 nodoAnterior.setSiguiente(nodoAEliminar.getSiguiente());
+                if (nodoAnterior.getSiguiente() != null) {
+                    nodoAnterior.getSiguiente().setAnterior(nodoAnterior);
+                }
             }
             cantidadElementos--;
         }
@@ -60,25 +70,38 @@ public class ListaEnlazadaDoble {
         if (posicionValida(posicion)){
             NodoListaDoble nodoAInsertar = new NodoListaDoble(elementoAInsertar);
             if (posicion == 1){
+                primerElemento.setAnterior(nodoAInsertar);
                 nodoAInsertar.setSiguiente(primerElemento);
                 primerElemento = nodoAInsertar;
             } else {
                 NodoListaDoble nodoAnteriorAlInsertado = buscaNodo(posicion-1);
                 NodoListaDoble nodoSiguienteAlInsertado = nodoAnteriorAlInsertado.getSiguiente();
                 nodoAnteriorAlInsertado.setSiguiente(nodoAInsertar);
+                nodoSiguienteAlInsertado.setAnterior(nodoAInsertar);
                 nodoAInsertar.setSiguiente(nodoSiguienteAlInsertado);
+                nodoAInsertar.setAnterior(nodoAnteriorAlInsertado);
             }
             cantidadElementos++;
         }
     }
 
 
-    public String toString(){
+    public String toStringDelPrimerAlUltimoElemento(){
         String listadoDeElementos = "";
         NodoListaDoble nodo = this.primerElemento;
         while (nodo != null){
             listadoDeElementos += nodo.getElemento() + "\n";
             nodo = nodo.getSiguiente();
+        }
+        return listadoDeElementos;
+    }
+
+    public String toStringDelUltimoAlPrimerElemento() {
+        String listadoDeElementos = "";
+        NodoListaDoble nodo = buscaNodo(longitud());
+        while (nodo != null) {
+            listadoDeElementos += nodo.getElemento() + "\n";
+            nodo = nodo.getAnterior();
         }
         return listadoDeElementos;
     }
